@@ -1,10 +1,12 @@
 package AlexBorzilov.todoApplication.exception;
 
-import AlexBorzilov.todoApplication.response.BaseSuccessResponse;
-import AlexBorzilov.todoApplication.response.CustomSuccessResponse;
+import java.util.List;
+
 import AlexBorzilov.todoApplication.error.ErrorCodes;
 import AlexBorzilov.todoApplication.error.ValidationConstants;
-import org.springframework.data.annotation.LastModifiedDate;
+import AlexBorzilov.todoApplication.response.BaseSuccessResponse;
+import AlexBorzilov.todoApplication.response.CustomSuccessResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,11 +16,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
     private final boolean success = true;
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleNotReadableMessageException() {
@@ -51,6 +53,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(new CustomSuccessResponse<>(errorList, errorCodeList.get(0), success),
                 HttpStatus.BAD_REQUEST);
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(TaskNotFoundException.class)
     public ResponseEntity<?> handleBusinessException() {

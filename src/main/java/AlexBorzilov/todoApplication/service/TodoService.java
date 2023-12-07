@@ -1,25 +1,29 @@
 package AlexBorzilov.todoApplication.service;
 
+import java.util.List;
 
+import AlexBorzilov.todoApplication.dto.CreateTodoDto;
 import AlexBorzilov.todoApplication.dto.GetNewsDto;
 import AlexBorzilov.todoApplication.entity.TasksEntity;
-import AlexBorzilov.todoApplication.dto.CreateTodoDto;
 import AlexBorzilov.todoApplication.exception.TaskNotFoundException;
 import AlexBorzilov.todoApplication.repository.TasksRepo;
 import AlexBorzilov.todoApplication.response.BaseSuccessResponse;
 import AlexBorzilov.todoApplication.response.CustomSuccessResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.data.domain.PageRequest;
+
 @Service
 public class TodoService {
     //TODO через конструктор лучше, есть три типа внедрения
     private final TasksRepo tasksRepo;
+
     @Autowired
-    public TodoService(TasksRepo tasksRepo){
+    public TodoService(TasksRepo tasksRepo) {
         this.tasksRepo = tasksRepo;
     }
+
     public CustomSuccessResponse<TasksEntity> createTodo(CreateTodoDto task) {
         TasksEntity tasksEntity = new TasksEntity();
         tasksEntity.setText(task.getText());
@@ -67,6 +71,7 @@ public class TodoService {
         tasksRepo.deleteAllWithTrueStatus();
         return new BaseSuccessResponse();
     }
+
     public BaseSuccessResponse patch(boolean status) throws TaskNotFoundException {
         if (tasksRepo.findAll().isEmpty()) {
             throw new TaskNotFoundException("Task not found");
@@ -90,12 +95,13 @@ public class TodoService {
         if (tasksRepo.findById(id).isEmpty()) {
             throw new TaskNotFoundException("Task not found");
         }
-        tasksRepo.findById(id).ifPresent(t->{
+        tasksRepo.findById(id).ifPresent(t -> {
             t.setStatus(!t.isStatus());
             tasksRepo.save(t);
         });
         return new BaseSuccessResponse();
     }
+
     public BaseSuccessResponse patchText(long id, String text) throws TaskNotFoundException {
         if (tasksRepo.findById(id).isEmpty()) {
             throw new TaskNotFoundException("Task not found");

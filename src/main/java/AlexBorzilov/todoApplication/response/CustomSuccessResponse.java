@@ -1,4 +1,5 @@
 package AlexBorzilov.todoApplication.response;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public class CustomSuccessResponse<T> {
         this.codes = codes;
         this.statusCode = statusCode;
     }
+
     public CustomSuccessResponse(T codes, int statusCode, boolean status) {
         this.codes = codes;
         this.statusCode = statusCode;

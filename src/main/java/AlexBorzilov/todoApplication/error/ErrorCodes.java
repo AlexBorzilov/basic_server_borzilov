@@ -1,4 +1,5 @@
 package AlexBorzilov.todoApplication.error;
+
 public enum ErrorCodes {
     UNKNOWN(0, "unknown"),
     USERNAME_SIZE_NOT_VALID(1, ValidationConstants.USERNAME_SIZE_NOT_VALID),

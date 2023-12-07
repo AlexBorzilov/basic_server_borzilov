@@ -1,5 +1,6 @@
 package AlexBorzilov.todoApplication.dto;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,5 +9,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class ChangeStatusTodoDto {
-    boolean status;
+    @Pattern(regexp = "^true$|^false$", message = "allowed input: true or false")
+    Boolean status;
 }

@@ -1,6 +1,7 @@
 package AlexBorzilov.todoApplication.exception;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import AlexBorzilov.todoApplication.error.ErrorCodes;
 import AlexBorzilov.todoApplication.error.ValidationConstants;
@@ -33,11 +34,11 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleNotSupportedRequestMethodException() {
         return new ResponseEntity<>(new CustomSuccessResponse<>(ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION,
                 ErrorCodes.determineErrorCode(ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION), success),
-                HttpStatus.METHOD_NOT_ALLOWED);
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -61,7 +62,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<?> handleBusinessException() {
         return new ResponseEntity<>(new CustomSuccessResponse<>(ValidationConstants.TASK_NOT_FOUND,
-                ErrorCodes.determineErrorCode(ValidationConstants.TASK_NOT_FOUND), success), HttpStatus.I_AM_A_TEAPOT);
+                ErrorCodes.determineErrorCode(ValidationConstants.TASK_NOT_FOUND), success), HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -74,33 +75,20 @@ public class RestExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleException(ConstraintViolationException e) {
-        List<String> errorList = e
-                .getMessage()
-                .lines()
-                .toList();
-        List<Integer> errorCodeList = errorList
+        List<Integer> statusCodes = e.getConstraintViolations()
                 .stream()
-                .map(ErrorCodes::determineErrorCode)
-                .distinct()
-                .toList();
-        return new ResponseEntity<>(new CustomSuccessResponse<>(errorList, errorCodeList.get(0), success),
-                HttpStatus.BAD_REQUEST);
+                .map(error -> ErrorCodes.determineErrorCode(error.getMessage()))
+                .collect(Collectors.toList());
+        return ResponseEntity.badRequest().body(new CustomSuccessResponse<>(statusCodes, statusCodes.get(0), true));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleException(MethodArgumentNotValidException e) {
-        List<String> errorList = e
-                .getBody()
-                .getDetail()
-                .lines()
-                .toList();
-        List<Integer> errorCodeList = errorList
+        List<Integer> statusCodes = e.getBindingResult().getAllErrors()
                 .stream()
-                .map(ErrorCodes::determineErrorCode)
-                .distinct()
-                .toList();
-        return new ResponseEntity<>(new CustomSuccessResponse<>(errorList, errorCodeList.get(0), success),
-                HttpStatus.BAD_REQUEST);
+                .map(error -> ErrorCodes.determineErrorCode(error.getDefaultMessage()))
+                .collect(Collectors.toList());
+        return ResponseEntity.badRequest().body(new CustomSuccessResponse<>(statusCodes, statusCodes.get(0), true));
     }
 }

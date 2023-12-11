@@ -2,7 +2,11 @@ package AlexBorzilov.todoApplication.service;
 
 import java.util.List;
 
+import AlexBorzilov.todoApplication.dto.ChangeTextTodoDto;
+import AlexBorzilov.todoApplication.error.ValidationConstants;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import AlexBorzilov.todoApplication.dto.CreateTodoDto;
 import AlexBorzilov.todoApplication.dto.GetNewsDto;
@@ -87,7 +91,7 @@ public class TodoService {
     }
 
     @Transactional
-    public BaseSuccessResponse delete(long id) throws AppException {
+    public BaseSuccessResponse delete(@Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) long id) throws AppException {
         if (tasksRepo.findById(id).isEmpty()) {
             throw new AppException("Task not found");
         }
@@ -95,24 +99,25 @@ public class TodoService {
         return new BaseSuccessResponse();
     }
 
-    public BaseSuccessResponse patchStatus(long id) throws AppException {
+    public BaseSuccessResponse patchStatus(ChangeStatusTodoDto statusTodoDto, long id) throws AppException {
         if (tasksRepo.findById(id).isEmpty()) {
             throw new AppException("Task not found");
         }
         tasksRepo.findById(id).ifPresent(t -> {
-            t.setStatus(!t.isStatus());
+            t.setStatus(statusTodoDto.getStatus());
             tasksRepo.save(t);
         });
         return new BaseSuccessResponse();
     }
 
-    public BaseSuccessResponse patchText(long id, String text) throws AppException {
+    public BaseSuccessResponse patchText(ChangeTextTodoDto changeTextTodoDto, long id) throws AppException {
+
         if (tasksRepo.findById(id).isEmpty()) {
             throw new AppException("Task not found");
         }
 
         tasksRepo.findById(id).ifPresent(tasksEntity -> {
-            tasksEntity.setText(text);
+            tasksEntity.setText(changeTextTodoDto.getText());
             tasksRepo.save(tasksEntity);
         });
         return new BaseSuccessResponse();

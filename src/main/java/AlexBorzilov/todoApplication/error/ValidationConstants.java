@@ -39,7 +39,7 @@ public interface ValidationConstants {
     String USER_NAME_HAS_TO_BE_PRESENT = "User name has to be present";
     String TODO_TEXT_NOT_NULL = "todo text not null";
     String TODO_TEXT_SIZE_NOT_VALID = "size not valid";
-    String TODO_STATUS_NOT_NULL = "todo status not null";
+    String TODO_STATUS_NOT_NULL = "todo success not null";
     String TASK_NOT_FOUND = "task not found";
     String TASK_PATCH_UPDATED_NOT_CORRECT_COUNT = "task patch updated not correct count";
     String TASKS_PAGE_GREATER_OR_EQUAL_1 = "task page greater or equal 1";

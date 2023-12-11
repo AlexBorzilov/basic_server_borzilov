@@ -1,5 +1,6 @@
 package AlexBorzilov.todoApplication.dto;
 
+import AlexBorzilov.todoApplication.error.ValidationConstants;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -10,7 +11,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class ChangeStatusTodoDto {
-    @NotNull
-    @Pattern(regexp = "^true$|^false$", message = "allowed input: true or false")
-    Boolean status;
+    @NotNull(message = ValidationConstants.TODO_STATUS_NOT_NULL)
+    private Boolean status;
 }

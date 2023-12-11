@@ -1,7 +1,9 @@
 package AlexBorzilov.todoApplication.controller;
 
 import AlexBorzilov.todoApplication.dto.ChangeStatusTodoDto;
+import AlexBorzilov.todoApplication.dto.ChangeTextTodoDto;
 import AlexBorzilov.todoApplication.dto.CreateTodoDto;
+import AlexBorzilov.todoApplication.error.ValidationConstants;
 import AlexBorzilov.todoApplication.exception.RestExceptionHandler;
 import AlexBorzilov.todoApplication.exception.AppException;
 import AlexBorzilov.todoApplication.service.TodoService;
@@ -36,29 +38,29 @@ public class TodoController extends RestExceptionHandler {
         return ResponseEntity.ok(todoService.getPaginated(page, perPage, status));
     }
 
-    @DeleteMapping//deletes ready(status = true) tasks
+    @DeleteMapping//deletes ready(success = true) tasks
     public ResponseEntity<?> deleteAllReady() {
         return ResponseEntity.ok(todoService.deleteAllReady());
     }
 
-    @PatchMapping//searches for tasks by status and changes it to the opposite one
-    public ResponseEntity<?> patch(@RequestBody @NotNull ChangeStatusTodoDto statusTodoDto) throws AppException {
+    @PatchMapping//searches for tasks by success and changes it to the opposite one
+    public ResponseEntity<?> patch(@RequestBody @Valid ChangeStatusTodoDto statusTodoDto) throws AppException {
         return ResponseEntity.ok(todoService.patch(statusTodoDto));
     }
 
     @DeleteMapping("/{id}") //deletes the task found by ID
-    public ResponseEntity<?> delete(@PathVariable("id") @Positive long id) throws AppException {
+    public ResponseEntity<?> delete(@PathVariable("id") @NotNull @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) long id) throws AppException {
         return ResponseEntity.ok(todoService.delete(id));
     }
 
     @PatchMapping("/status/{id}") //changes the text of the task found by ID
-    public ResponseEntity<?> patchStatus(@PathVariable("id") @Positive long id) throws AppException {
-        return ResponseEntity.ok(todoService.patchStatus(id));
+    public ResponseEntity<?> patchStatus(@RequestBody @Valid ChangeStatusTodoDto changeStatusTodoDto, @PathVariable("id") @Positive long id) throws AppException {
+        return ResponseEntity.ok(todoService.patchStatus(changeStatusTodoDto, id));
     }
 
     @PatchMapping("/text/{id}") //changes the text of the task found by ID
     public ResponseEntity<?> patchText(@PathVariable("id") @Positive long id,
-                                       @RequestParam @Valid String text) throws AppException {
-        return ResponseEntity.ok(todoService.patchText(id, text));
+                                       @RequestBody @Valid ChangeTextTodoDto changeTextTodoDto) throws AppException {
+        return ResponseEntity.ok(todoService.patchText(changeTextTodoDto, id));
     }
 }

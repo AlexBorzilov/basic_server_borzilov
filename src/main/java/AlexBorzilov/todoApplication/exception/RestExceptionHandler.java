@@ -6,9 +6,9 @@ import AlexBorzilov.todoApplication.error.ErrorCodes;
 import AlexBorzilov.todoApplication.error.ValidationConstants;
 import AlexBorzilov.todoApplication.response.BaseSuccessResponse;
 import AlexBorzilov.todoApplication.response.CustomSuccessResponse;
-
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

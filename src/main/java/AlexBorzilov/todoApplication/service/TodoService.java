@@ -2,20 +2,21 @@ package AlexBorzilov.todoApplication.service;
 
 import java.util.List;
 
-import AlexBorzilov.todoApplication.dto.ChangeStatusTodoDto;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import AlexBorzilov.todoApplication.dto.CreateTodoDto;
 import AlexBorzilov.todoApplication.dto.GetNewsDto;
+import AlexBorzilov.todoApplication.dto.ChangeStatusTodoDto;
 import AlexBorzilov.todoApplication.entity.TasksEntity;
 import AlexBorzilov.todoApplication.exception.AppException;
 import AlexBorzilov.todoApplication.repository.TasksRepo;
 import AlexBorzilov.todoApplication.response.BaseSuccessResponse;
 import AlexBorzilov.todoApplication.response.CustomSuccessResponse;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,9 @@ public class TodoService {
         return new CustomSuccessResponse<>(tasksEntity);
     }
 
-    public CustomSuccessResponse<GetNewsDto<List<TasksEntity>>> getPaginated(Integer page, Integer perPage, Boolean status) {
+    public CustomSuccessResponse<GetNewsDto<List<TasksEntity>>> getPaginated(Integer page,
+                                                                             Integer perPage,
+                                                                             Boolean status) {
         List<TasksEntity> tasksEntityList;
         int notReady = 0;
         int ready = 0;
@@ -107,6 +110,7 @@ public class TodoService {
         if (tasksRepo.findById(id).isEmpty()) {
             throw new AppException("Task not found");
         }
+
         tasksRepo.findById(id).ifPresent(tasksEntity -> {
             tasksEntity.setText(text);
             tasksRepo.save(tasksEntity);

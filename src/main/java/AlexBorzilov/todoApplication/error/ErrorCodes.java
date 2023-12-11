@@ -59,8 +59,9 @@ public enum ErrorCodes {
     public static int determineErrorCode(String errorMessage) {
         for (ErrorCodes e :
                 ErrorCodes.values()) {
-            if (e.errorMessage.equals(errorMessage))
+            if (e.errorMessage.equals(errorMessage)) {
                 return e.errorCode;
+            }
         }
         return -1;
     }

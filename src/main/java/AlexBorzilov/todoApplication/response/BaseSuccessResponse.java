@@ -12,10 +12,6 @@ public class BaseSuccessResponse {
     private int statusCode = 1;
     private boolean success = true;
 
-    public BaseSuccessResponse(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
     public BaseSuccessResponse(int statusCode, boolean success) {
         this.statusCode = statusCode;
         this.success = success;

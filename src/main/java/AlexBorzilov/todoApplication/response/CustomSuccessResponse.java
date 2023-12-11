@@ -15,11 +15,6 @@ public class CustomSuccessResponse<T> {
         this.data = data;
     }
 
-    public CustomSuccessResponse(T codes, int statusCode) {
-        this.codes = codes;
-        this.statusCode = statusCode;
-    }
-
     public CustomSuccessResponse(T codes, int statusCode, boolean status) {
         this.codes = codes;
         this.statusCode = statusCode;

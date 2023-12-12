@@ -1,6 +1,5 @@
 package AlexBorzilov.todoApplication.error;
 
-
 public enum ErrorCodes {
     UNKNOWN(0, "unknown"),
     USERNAME_SIZE_NOT_VALID(1, ValidationConstants.USERNAME_SIZE_NOT_VALID),
@@ -56,11 +55,13 @@ public enum ErrorCodes {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
+
     public static int determineErrorCode(String errorMessage) {
         for (ErrorCodes e :
                 ErrorCodes.values()) {
-            if (e.errorMessage.equals(errorMessage))
+            if (e.errorMessage.equals(errorMessage)) {
                 return e.errorCode;
+            }
         }
         return -1;
     }

@@ -1,10 +1,18 @@
 package AlexBorzilov.todoApplication.controller;
 
+import AlexBorzilov.todoApplication.dto.ChangeStatusTodoDto;
+import AlexBorzilov.todoApplication.dto.ChangeTextTodoDto;
 import AlexBorzilov.todoApplication.dto.CreateTodoDto;
+import AlexBorzilov.todoApplication.error.ValidationConstants;
+import AlexBorzilov.todoApplication.exception.AppException;
 import AlexBorzilov.todoApplication.exception.RestExceptionHandler;
-import AlexBorzilov.todoApplication.exception.TaskNotFoundException;
 import AlexBorzilov.todoApplication.service.TodoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,43 +21,49 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/todo")
 @Validated
+@RequiredArgsConstructor
 public class TodoController extends RestExceptionHandler {
-    @Autowired
-    private TodoService todoService;
+    private final TodoService todoService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createTodo(@RequestBody CreateTodoDto task) {
-            return ResponseEntity.ok(todoService.createTodo(task));
+    public ResponseEntity<?> createTodo(@RequestBody @Valid CreateTodoDto task) {
+        return ResponseEntity.ok(todoService.createTodo(task));
     }
+
     @GetMapping
-    public ResponseEntity<?> getPaginated(@RequestParam Integer page, @RequestParam Integer perPage,
+    public ResponseEntity<?> getPaginated(@RequestParam @Max(400) @Positive Integer page,
+                                          @RequestParam @Max(400) @Positive Integer perPage,
                                           @RequestParam(required = false) Boolean status) {
-            return ResponseEntity.ok(todoService.getPaginated(page, perPage, status));
+        return ResponseEntity.ok(todoService.getPaginated(page, perPage, status));
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteAllReady() {
-            return ResponseEntity.ok(todoService.deleteAllReady());
+        return ResponseEntity.ok(todoService.deleteAllReady());
     }
 
     @PatchMapping
-    public ResponseEntity<?> patch(@RequestParam boolean status) throws TaskNotFoundException {
-            return ResponseEntity.ok(todoService.patch(status));
+    public ResponseEntity<?> patch(@RequestBody @Valid ChangeStatusTodoDto statusTodoDto) throws AppException {
+        return ResponseEntity.ok(todoService.patch(statusTodoDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) throws TaskNotFoundException {
+    public ResponseEntity<?> delete(@PathVariable("id")
+                                    @NotNull @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE)
+                                    long id) throws AppException {
         return ResponseEntity.ok(todoService.delete(id));
     }
 
     @PatchMapping("/status/{id}")
-    public ResponseEntity<?> patchStatus(@PathVariable("id") long id) throws TaskNotFoundException{
-            return ResponseEntity.ok(todoService.patchStatus(id));
+    public ResponseEntity<?> patchStatus(@RequestBody @Valid ChangeStatusTodoDto changeStatusTodoDto,
+                                         @PathVariable("id") @Positive long id) throws AppException {
+        return ResponseEntity.ok(todoService.patchStatus(changeStatusTodoDto, id));
     }
 
     @PatchMapping("/text/{id}")
-    public ResponseEntity<?> patchText(@PathVariable("id") long id, @RequestParam String text) throws TaskNotFoundException{
-            return ResponseEntity.ok(todoService.patchText(id, text));
+    public ResponseEntity<?> patchText(@PathVariable("id") @Positive long id,
+                                       @RequestBody @Valid ChangeTextTodoDto changeTextTodoDto) throws AppException {
+        return ResponseEntity.ok(todoService.patchText(changeTextTodoDto, id));
     }
 }

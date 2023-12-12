@@ -2,21 +2,16 @@ package AlexBorzilov.todoApplication.service;
 
 import java.util.List;
 
+import AlexBorzilov.todoApplication.dto.ChangeStatusTodoDto;
 import AlexBorzilov.todoApplication.dto.ChangeTextTodoDto;
-import AlexBorzilov.todoApplication.error.ValidationConstants;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import lombok.RequiredArgsConstructor;
 import AlexBorzilov.todoApplication.dto.CreateTodoDto;
 import AlexBorzilov.todoApplication.dto.GetNewsDto;
-import AlexBorzilov.todoApplication.dto.ChangeStatusTodoDto;
 import AlexBorzilov.todoApplication.entity.TasksEntity;
 import AlexBorzilov.todoApplication.exception.AppException;
 import AlexBorzilov.todoApplication.repository.TasksRepo;
 import AlexBorzilov.todoApplication.response.BaseSuccessResponse;
 import AlexBorzilov.todoApplication.response.CustomSuccessResponse;
-
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -91,7 +86,7 @@ public class TodoService {
     }
 
     @Transactional
-    public BaseSuccessResponse delete(@Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) long id) throws AppException {
+    public BaseSuccessResponse delete(long id) throws AppException {
         if (tasksRepo.findById(id).isEmpty()) {
             throw new AppException("Task not found");
         }

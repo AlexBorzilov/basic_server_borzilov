@@ -2,7 +2,6 @@ package AlexBorzilov.todoApplication.dto;
 
 import AlexBorzilov.todoApplication.error.ValidationConstants;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
